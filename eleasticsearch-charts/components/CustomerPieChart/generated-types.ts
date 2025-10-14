@@ -2,5 +2,6 @@
 
 export type ExtraSettings = {
     label: string;
+    clickUrl: string;
 };
 
