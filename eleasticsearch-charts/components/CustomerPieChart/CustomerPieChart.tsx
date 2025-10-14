@@ -67,8 +67,9 @@ export default function CustomerPieChart() {
       <h3 className="c:text-base c:font-semibold c:leading-6 c:text-gray-900 c:mb-4">
         {extraSettings.label || "Pie Chart"}
       </h3>
+      <div style={{ width: '100%', minWidth: '100%' }}>
       {chartData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={700}>
           <PieChart>
             <Pie
               data={chartData}
@@ -100,6 +101,7 @@ export default function CustomerPieChart() {
           No data available
         </div>
       )}
+      </div>
     </div>
   );
 }
