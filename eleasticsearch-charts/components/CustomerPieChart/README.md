@@ -16,7 +16,7 @@ Use the following test payload inside Flowable Design using the Form debugger:
   }
 }
 ```
-
+The objects that make up the `items` array are intended to support raw aggregation responses from elasticsearch where `doc_count` represents the number of hits in the "bucket" and `key` represents "bucket" identifier/name.
 ## Clickable Slices
 
 You can make pie chart slices clickable by configuring a `clickUrl` in the ExtraSettings. The URL supports template interpolation:
