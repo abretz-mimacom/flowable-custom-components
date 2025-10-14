@@ -1,5 +1,6 @@
 Use the following test payload inside Flowable Design using the Form debugger:
 
+```
 {
   "yourValue": {
     "items": [
@@ -14,3 +15,4 @@ Use the following test payload inside Flowable Design using the Form debugger:
     ]
   }
 }
+```
