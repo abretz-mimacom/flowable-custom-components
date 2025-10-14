@@ -14,7 +14,7 @@ interface PieChartValue {
 type Value = PieChartValue;
 
 export default function CustomerPieChart() {
-  const { value } = useCustomComponent<Value, ExtraSettings>();
+  const { value, extraSettings } = useCustomComponent<Value, ExtraSettings>();
 
   // Define colors for pie slices
   const COLORS = [
@@ -33,7 +33,31 @@ export default function CustomerPieChart() {
     value?.items?.map((item: PieChartItem) => ({
       name: item.label,
       value: parseFloat(item.value) || 0,
+      originalItem: item,
     })) || [];
+
+  // Handle click on pie slice
+  const handleClick = (data: any) => {
+    if (!extraSettings?.clickUrl) return;
+
+    // Interpolate the URL template with the clicked item data
+    let url = extraSettings.clickUrl;
+    
+    // Replace {{$item.value.label}} with the actual label
+    url = url.replace(/\{\{\$item\.value\.label\}\}/g, data.originalItem.label);
+    
+    // Replace {{$item.value.value}} with the actual value
+    url = url.replace(/\{\{\$item\.value\.value\}\}/g, data.originalItem.value);
+    
+    // Replace {{$item.name}} with the chart data name
+    url = url.replace(/\{\{\$item\.name\}\}/g, data.name);
+    
+    // Replace {{$item.value}} with the chart data value
+    url = url.replace(/\{\{\$item\.value\}\}/g, String(data.value));
+
+    // Open in new window
+    window.open(url, '_blank');
+  };
 
   return (
     <div className="c:bg-white c:shadow-sm c:rounded-lg c:p-6">
@@ -54,6 +78,8 @@ export default function CustomerPieChart() {
               outerRadius={120}
               fill="#8884d8"
               dataKey="value"
+              onClick={handleClick}
+              cursor={extraSettings?.clickUrl ? "pointer" : "default"}
             >
               {chartData.map((_entry, index: number) => (
                 <Cell
