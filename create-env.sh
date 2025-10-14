@@ -5,7 +5,7 @@
 setup_cluster() {
 	local cluster_name="$1"
 	echo "Setting up kind cluster '$cluster_name'"
-	bash -c "$CODESPACE_VSCODE_FOLDER/scripts/kind-cluster-setup.sh $cluster_name"
+	bash -c "$CODESPACE_VSCODE_FOLDER/scripts/kind-cluster-setup.sh $cluster_name true"
 }
 
 # Reusable function for deployment
@@ -43,6 +43,7 @@ else
 	CLUSTER_NAME="${3:-kind}"
 	setup_cluster "$CLUSTER_NAME"
 	deploy_flowable "$NAMESPACE" "$RELEASE_NAME"
+
 	# kubectl config set-context --current  --cluster="$CLUSTER_NAME"-kind --namespace="$NAMESPACE"
 fi
 

@@ -1,15 +1,31 @@
+global:
+  security:
+    allowInsecureImages: true
+
 flowable:
   ingress:
-  #     # Enable/disbale the ingress configuration for the Helm chart.
+  # Enable/disbale the ingress configuration for the Helm chart.
     enabled: false
-  #   # Define if https should be used to access the service urls (this is highly suggested)
-  #   tls: true
-  #   # Ingress proxy settings in case of custom frontend (CORS)
-  #   allowOriginEnabled: true
-  #   allowOriginUrl: "*"
-  #   domain: projects.flowable.io
-  #   bodySize: "20m"
-  #   ingressClass: external
+    # Define mapping type; 'host' for domain name mapping or 'path' for path name mapping
+    mappingType: path
+    # Define if https should be used to access the service urls (this is highly suggested)
+    tls: false
+    certManagerClusterIssuer: ""
+    # Ingress proxy settings in case of custom frontend (CORS)
+    allowOriginEnabled: true
+    upgradeHttpConnection: false
+    allowOriginUrl: "*"
+    bodySize: "20m"
+    ingressClass: nginx
+    domain: jubilant-tribble-4j659xwgrq4f5g4v-8090.app.github.dev
+    management:
+      expose: false
+    # Define a hostname override <service>.<hostOverride> instead of the default <service>.<release>.<domain>
+    hostOverride: jubilant-tribble-4j659xwgrq4f5g4v-8090.app.github.dev
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      # We’re proxying to HTTP backends
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
   postgres:
     enabled: true
@@ -33,6 +49,7 @@ flowable:
 
   work:
     enabled: true
+    contextPath: /flowable-work
     image:
   #    repository: localhost:5001/myflowable
       tag: latest
@@ -55,6 +72,11 @@ flowable:
       flowable.platform.enable-audit-log: "true"
       management.elastic.metrics.export.enabled: "true"
       flowable.indexing.enabled: "true"
+      # Spring Boot 2.6+
+      server.forward-headers-strategy: "framework"
+      # Optional: trust your cluster subnets if needed for remote IP parsing
+      server.tomcat.remoteip.trusted-proxies: "10\\.0\\.0\\.0/8,192\\.168\\.0\\.0/16,172\\.16\\.0\\.0/12"
+
       # extraVolumes:
       #   - name: additional-classpath
       #     hostPath:
@@ -97,6 +119,7 @@ flowable:
 
   design:
     enabled: true
+    contextPath: /flowable-design
     image:
       tag: latest
       # tag: 2025.1.01
@@ -113,6 +136,11 @@ flowable:
         flowable.design.model-locking.auto-lock-on-create: true
         flowable.design.form-component-development.enabled: true
         flowable.design.security.access-token.signing-secret: "test-signing-secret-test-signing-secret-test-signing-secret-test-signing-secret"
+        # Spring Boot 2.6+
+        server.forward-headers-strategy: "framework"
+        # Optional: trust your cluster subnets if needed for remote IP parsing
+        server.tomcat.remoteip.trusted-proxies: "10\\.0\\.0\\.0/8,192\\.168\\.0\\.0/16,172\\.16\\.0\\.0/12"
+
   #      application.design.ai.type: openai
   #      spring.ai.openai.api-key: ""
   #      spring.ai.openai.chat.options.temperature: 0.3
@@ -124,9 +152,15 @@ flowable:
 
   control:
     enabled: true
+    contextPath: /flowable-control
     image:
       tag: latest
       # tag: 2025.1.01
+    envVariables:
+      # Spring Boot 2.6+
+      server.forward-headers-strategy: "framework"
+      # Optional: trust your cluster subnets if needed for remote IP parsing
+      server.tomcat.remoteip.trusted-proxies: "10\\.0\\.0\\.0/8,192\\.168\\.0\\.0/16,172\\.16\\.0\\.0/12"
 
   flowable:
     dockerAuthSecret: flowable-flowable-regcred
