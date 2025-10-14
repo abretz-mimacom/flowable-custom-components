@@ -1,32 +1,76 @@
 import { useCustomComponent } from "@flowable/forms";
 import { ExtraSettings } from "./generated-types";
-import {Cell, Pie, PieChart} from "recharts";
+import { Cell, Pie, PieChart, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
+interface PieChartItem {
+  label: string;
+  value: string;
+}
 
-type Value = any;
+interface PieChartValue {
+  items: PieChartItem[];
+}
+
+type Value = PieChartValue;
 
 export default function CustomerPieChart() {
-  const { value = 0, setValue } = useCustomComponent<Value, ExtraSettings>();
+  const { value } = useCustomComponent<Value, ExtraSettings>();
+
+  // Define colors for pie slices
+  const COLORS = [
+    "#0088FE",
+    "#00C49F",
+    "#FFBB28",
+    "#FF8042",
+    "#8884D8",
+    "#82CA9D",
+    "#FFC658",
+    "#FF6B9D",
+  ];
+
+  // Parse and prepare data for the chart
+  const chartData =
+    value?.items?.map((item: PieChartItem) => ({
+      name: item.label,
+      value: parseFloat(item.value) || 0,
+    })) || [];
 
   return (
-    // @Copilot delete this
     <div className="c:bg-white c:shadow-sm c:rounded-lg c:p-6">
-      <h3 className="c:text-base c:font-semibold c:leading-6 c:text-gray-900">
-        Custom component <span className="font-bold">CustomerPieChart</span>
+      <h3 className="c:text-base c:font-semibold c:leading-6 c:text-gray-900 c:mb-4">
+        Customer Pie Chart
       </h3>
-      <p className="c:mt-2 c:max-w-xl c:text-sm c:text-gray-500">
-        This is your custom component, <br />
-        you can edit it at <code>/components/CustomerPieChart/CustomerPieChart.tsx</code> file.
-      </p>
-      <button
-        onClick={() => {
-          setValue((value || 0) + 1);
-        }}
-        className="c:mt-5 c:tw:inline-flex c:items-center c:rounded-md c:bg-indigo-600 c:px-3 c:py-2 c:text-sm c:font-semibold c:text-white c:shadow-xs c:hover:bg-indigo-500 c:focus-visible:outline c:focus-visible:outline-2 c:focus-visible:outline-offset-2 c:focus-visible:outline-indigo-500 c:cursor-pointer"
-      >
-        Change value {value}
-      </button>
+      {chartData.length > 0 ? (
+        <ResponsiveContainer width="100%" height={400}>
+          <PieChart>
+            <Pie
+              data={chartData}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={({ name, percent }: { name: string; percent: number }) =>
+                `${name}: ${(percent * 100).toFixed(0)}%`
+              }
+              outerRadius={120}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {chartData.map((_entry, index: number) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      ) : (
+        <div className="c:text-center c:py-8 c:text-gray-500">
+          No data available
+        </div>
+      )}
     </div>
-    // @Copilot can you please implement a PieChart imported from recharts 3.2.1? `value` will take the form for a json {"items":[{"label": "val1", "value": "90"},{"label": "val2", "value":"10"}]}. The label here refers to the label of the value for the pie slice.
   );
 }
