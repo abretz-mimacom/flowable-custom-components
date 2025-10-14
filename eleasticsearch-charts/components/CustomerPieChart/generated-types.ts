@@ -2,6 +2,6 @@
 
 export type ExtraSettings = {
     label: string;
-    clickUrl?: string;
+    clickUrl: string;
 };
 
