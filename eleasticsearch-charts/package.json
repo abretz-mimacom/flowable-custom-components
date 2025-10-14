@@ -11,6 +11,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@elastic/charts": "^71.1.1",
     "@flowable/forms": "2025.1.3",
     "react": "18.3.1",
     "react-dom": "^18",
