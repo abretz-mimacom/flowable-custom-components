@@ -1,0 +1,139 @@
+flowable:
+  ingress:
+  #     # Enable/disbale the ingress configuration for the Helm chart.
+    enabled: false
+  #   # Define if https should be used to access the service urls (this is highly suggested)
+  #   tls: true
+  #   # Ingress proxy settings in case of custom frontend (CORS)
+  #   allowOriginEnabled: true
+  #   allowOriginUrl: "*"
+  #   domain: projects.flowable.io
+  #   bodySize: "20m"
+  #   ingressClass: external
+
+  postgres:
+    enabled: true
+    image:
+      repository: bitnamilegacy/postgresql
+      tag: 17.5.0
+    primary:
+      extraEnvVars:
+        - name: POSTGRESQL_MAX_CONNECTIONS
+          value: "400"
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "1Gi"
+        limits:
+          cpu: "1"
+          memory: "2Gi"
+
+  engage:
+    enabled: false
+
+  work:
+    enabled: true
+    image:
+  #    repository: localhost:5001/myflowable
+      tag: latest
+      # tag: 2025.1.01
+    replicas: 1 # multi-node deployment
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "1.5Gi"
+      limits:
+        cpu: "1000m"
+        memory: "1.5Gi"
+    metrics:
+      enabled: true
+    javaOpts: "-XX:InitialRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0 -XX:MinRAMPercentage=70.0"
+    management:
+      enabled: true
+    envVariables:
+      flowable.inspect.enabled: "true"
+      flowable.platform.enable-audit-log: "true"
+      management.elastic.metrics.export.enabled: "true"
+      flowable.indexing.enabled: "true"
+      # extraVolumes:
+      #   - name: additional-classpath
+      #     hostPath:
+      #       path: /Users/aaron.bretz/.m2/repository/org/flowable/jobapplication/0.0.1-SNAPSHOT/
+      #       type: Directory
+      # extraVolumeMounts:
+      #   - name: additional-classpath
+      #     mountPath: /additional-classpath/
+      # initContainers:
+      #   - name: copy-jar
+      #     image: busybox
+      #     command: ["sh", "-c", "cp /jars/my-lib.jar /additional-classpath/"]
+      #     volumeMounts:
+      #       - name: additional-classpath
+      #         mountPath: /additonal-classpath
+      #       - name: jar-source
+      #         mountPath:
+      #     volumeMounts:
+      #       - name: additional-classpath
+      #         mountPath: /additional-classpath/
+      # extraImagePullSecrets: flw-docker-auth
+    storage:
+      provisioner: rancher.io/local-path
+      storageClass: standard
+
+  elasticsearch:
+    enabled: true
+    image:
+      repository: bitnamilegacy/elasticsearch
+      tag: 8.18.0
+    nodeGroup: master
+    master:
+      resources:
+        requests:
+          cpu: 1
+          memory: 2048Mi
+        limits:
+          cpu: 1
+          memory: 2048Mi
+
+  design:
+    enabled: true
+    image:
+      tag: latest
+      # tag: 2025.1.01
+    resources:
+      requests:
+        cpu: "100m"
+        memory: "1.5Gi"
+      limits:
+        cpu: "1000m"
+        memory: "1.5Gi"
+    angularVersion: false
+    envVariables:
+        flowable.design.model-locking.enabled: true
+        flowable.design.model-locking.auto-lock-on-create: true
+        flowable.design.form-component-development.enabled: true
+        flowable.design.security.access-token.signing-secret: "test-signing-secret-test-signing-secret-test-signing-secret-test-signing-secret"
+  #      application.design.ai.type: openai
+  #      spring.ai.openai.api-key: ""
+  #      spring.ai.openai.chat.options.temperature: 0.3
+  #      spring.ai.openai.chat.options.model: gpt-4o
+  #      extraImagePullSecrets: flw-docker-auth
+  #      image:
+  #       repository: artifacts.flowable.com/docker-local/flowable/flowable-design
+
+
+  control:
+    enabled: true
+    image:
+      tag: latest
+      # tag: 2025.1.01
+
+  flowable:
+    dockerAuthSecret: flowable-flowable-regcred
+
+  prometheus:
+    enabled: false
+    monitoring:
+      enabled: true
+      global:
+        namespace: flowable

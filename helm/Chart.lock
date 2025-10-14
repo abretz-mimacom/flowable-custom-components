@@ -1,0 +1,6 @@
+dependencies:
+- name: flowable
+  repository: https://repo.flowable.com/flowable-helm
+  version: 2025.1.01
+digest: sha256:c34bee69cb6cc873e46cfad2cc26cbcc43046e59f83658e3338d0884f8f8dacd
+generated: "2025-10-14T19:24:44.268538988Z"
