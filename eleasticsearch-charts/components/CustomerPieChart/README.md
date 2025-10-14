@@ -16,3 +16,5 @@ Use the following test payload inside Flowable Design using the Form debugger:
   }
 }
 ```
+
+![alt text](assets/image.png)

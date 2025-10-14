@@ -1,30 +1,65 @@
 import { useCustomComponent } from "@flowable/forms";
 import { ExtraSettings } from "./generated-types";
+import {
+  Chart,
+  Settings,
+  BarSeries,
+  Axis,
+  Position,
+  ScaleType,
+} from "@elastic/charts";
+import "@elastic/charts/dist/theme_only_light.css";
 
-type Value = any;
+interface BarChartItem {
+  label: string;
+  value: string | number;
+}
+
+interface BarChartValue {
+  items?: BarChartItem[];
+}
+
+type Value = BarChartValue;
 
 export default function EsBarChart() {
-  const { value = 0, setValue } = useCustomComponent<Value, ExtraSettings>();
+  const { value } = useCustomComponent<Value, ExtraSettings>();
+
+  // Parse and prepare data for the chart
+  const chartData =
+    value?.items?.map((item: BarChartItem) => ({
+      x: item.label,
+      y: parseFloat(String(item.value)) || 0,
+    })) || [];
+
+  // Sort data by value (descending)
+  const sortedData = [...chartData].sort((a, b) => b.y - a.y);
 
   return (
-    // @Copilot: please delete
     <div className="c:bg-white c:shadow-sm c:rounded-lg c:p-6">
-      <h3 className="c:text-base c:font-semibold c:leading-6 c:text-gray-900">
-        Custom component <span className="font-bold">EsBarChart</span>
+      <h3 className="c:text-base c:font-semibold c:leading-6 c:text-gray-900 c:mb-4">
+        Bar Chart with Sorting
       </h3>
-      <p className="c:mt-2 c:max-w-xl c:text-sm c:text-gray-500">
-        This is your custom component, <br />
-        you can edit it at <code>/components/EsBarChart/EsBarChart.tsx</code> file.
-      </p>
-      <button
-        onClick={() => {
-          setValue((value || 0) + 1);
-        }}
-        className="c:mt-5 c:tw:inline-flex c:items-center c:rounded-md c:bg-indigo-600 c:px-3 c:py-2 c:text-sm c:font-semibold c:text-white c:shadow-xs c:hover:bg-indigo-500 c:focus-visible:outline c:focus-visible:outline-2 c:focus-visible:outline-offset-2 c:focus-visible:outline-indigo-500 c:cursor-pointer"
-      >
-        Change value {value}
-      </button>
+      {sortedData.length > 0 ? (
+        <div style={{ height: "400px" }}>
+          <Chart>
+            <Settings showLegend={false} />
+            <BarSeries
+              id="bars"
+              name="Values"
+              data={sortedData}
+              xAccessor="x"
+              yAccessors={["y"]}
+              xScaleType={ScaleType.Ordinal}
+            />
+            <Axis id="bottom-axis" position={Position.Bottom} />
+            <Axis id="left-axis" position={Position.Left} />
+          </Chart>
+        </div>
+      ) : (
+        <div className="c:text-center c:py-8 c:text-gray-500">
+          No data available
+        </div>
+      )}
     </div>
-    // @Copilot: please implment/embed a prebuilt package of this bar chart from @elastic/charts: https://elastic.github.io/elastic-charts/storybook/?path=/story/bar-chart--rendering-sort&globals=toggles.showHeader:true;toggles.showChartTitle:false;toggles.showChartDescription:false;toggles.showChartBoundary:false;theme:light
   );
 }
