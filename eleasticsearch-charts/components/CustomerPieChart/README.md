@@ -5,12 +5,12 @@ Use the following test payload inside Flowable Design using the Form debugger:
   "yourValue": {
     "items": [
       {
-        "label": "hi",
-        "value": 90
+        "key": "jim.jones",
+        "doc_count": 90
       },
       {
-        "label": "yo",
-        "value": 10
+        "key": "roy.rogers",
+        "doc_count": 10
       }
     ]
   }
@@ -24,13 +24,13 @@ You can make pie chart slices clickable by configuring a `clickUrl` in the Extra
 **ExtraSettings Example:**
 ```json
 {
-  "clickUrl": "/#/myapp/{{$item.value.label}}"
+  "clickUrl": "/#/myapp/{{$item.value.key}}"
 }
 ```
 
 **Available template variables:**
-- `{{$item.value.label}}` - The label from the original data item
-- `{{$item.value.value}}` - The value from the original data item
+- `{{$item.value.key}}` - The key from the original data item
+- `{{$item.value.doc_count}}` - The value from the original data item
 - `{{$item.name}}` - The chart data name
 - `{{$item.value}}` - The parsed numeric value
 
