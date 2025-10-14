@@ -59,7 +59,7 @@ export default function CustomerPieChart() {
     url = url.replace(/%%\$item\.value%%/g, String(data.value));
 
     // Open in new window
-    window.open(url, '_blank');
+    window.open(url, extraSettings.urlTarget || "_blank");
   };
 
   return (
