@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./internal/shadcn/*"]
+    },
+    "noEmit": true,
+    "importHelpers": true,
+    "module": "CommonJS",
+    "strict": true,
+    "target": "es2019",
+    "lib": ["dom", "es2015", "es2019"],
+    "esModuleInterop": true,
+    "jsx": "react-jsx"
+  },
+  "include": ["components/**/*", "shared/**/*", "internal/**/*"]
+}
