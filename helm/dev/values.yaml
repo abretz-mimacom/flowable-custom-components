@@ -101,8 +101,8 @@ flowable:
     enabled: true
     contextPath: /flowable-design
     image:
-      tag: latest
-      # tag: 2025.1.01
+      # tag: latest
+      tag: 2025.1.01
     resources:
       requests:
         cpu: "100m"
@@ -115,7 +115,7 @@ flowable:
     # Add a sidecar for flowable components that need to call back to localhost:3011
       - name: socat-tunnel
         image: alpine/socat
-        command: ["socat", "TCP-LISTEN:3011,fork,reuseaddr", "TCP:10.244.1.1:3011"]
+        command: ["socat", "TCP-LISTEN:3011,fork,reuseaddr", "TCP:kubernetes.default.svc.cluster.local:3011"]
         ports:
         - containerPort: 3011
         resources:

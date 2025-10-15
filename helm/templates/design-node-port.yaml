@@ -1,0 +1,15 @@
+# filepath: helm/templates/design-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: flowable-design-nodeport
+  namespace: dev
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: flowable-design  # Match your design pod labels
+  ports:
+  - port: 8080  # Service port
+    targetPort: 8080  # Pod's container port
+    nodePort: 30001  # Specific node port (choose an unused port in 30000-32767 range)
+    protocol: TCP

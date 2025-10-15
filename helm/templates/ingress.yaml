@@ -1,4 +1,4 @@
-# {{- if not .Values.flowable.ingress.enabled }}
+{{- if not .Values.flowable.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -10,7 +10,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: # must be blank to use CodeSpaces app URL
+  - host:  # must be blank to use CodeSpaces app URL
     http:
       paths:
       - path: /flowable-design
@@ -34,4 +34,4 @@ spec:
             name: flowable-control
             port:
               name: http
-# {{- end }}
+{{- end }}

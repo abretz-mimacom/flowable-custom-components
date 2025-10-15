@@ -5,7 +5,7 @@
 setup_cluster() {
 	local cluster_name="$1"
 	echo "Setting up kind cluster '$cluster_name'"
-	bash -c "$CODESPACE_VSCODE_FOLDER/scripts/kind-cluster-setup.sh $cluster_name true"
+	bash -c "$CODESPACE_VSCODE_FOLDER/scripts/kind-cluster-setup.sh $cluster_name true true"
 }
 
 # Reusable function for deployment
