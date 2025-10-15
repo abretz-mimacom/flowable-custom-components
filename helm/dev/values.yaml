@@ -6,26 +6,6 @@ flowable:
   ingress:
   # Enable/disbale the ingress configuration for the Helm chart.
     enabled: false
-    # Define mapping type; 'host' for domain name mapping or 'path' for path name mapping
-    mappingType: path
-    # Define if https should be used to access the service urls (this is highly suggested)
-    tls: false
-    certManagerClusterIssuer: ""
-    # Ingress proxy settings in case of custom frontend (CORS)
-    allowOriginEnabled: true
-    upgradeHttpConnection: false
-    allowOriginUrl: "*"
-    bodySize: "20m"
-    ingressClass: nginx
-    domain: jubilant-tribble-4j659xwgrq4f5g4v-8090.app.github.dev
-    management:
-      expose: false
-    # Define a hostname override <service>.<hostOverride> instead of the default <service>.<release>.<domain>
-    hostOverride: jubilant-tribble-4j659xwgrq4f5g4v-8090.app.github.dev
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-redirect: "false"
-      # We’re proxying to HTTP backends
-      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
   postgres:
     enabled: true
@@ -131,6 +111,20 @@ flowable:
         cpu: "1000m"
         memory: "1.5Gi"
     angularVersion: false
+    extraContainers:
+    # Add a sidecar for flowable components that need to call back to localhost:3011
+      - name: socat-tunnel
+        image: alpine/socat
+        command: ["socat", "TCP-LISTEN:3011,fork,reuseaddr", "TCP:10.244.1.1:3011"]
+        ports:
+        - containerPort: 3011
+        resources:
+          requests:
+            cpu: 10m
+            memory: 16Mi
+          limits:
+            cpu: 50m
+            memory: 32Mi
     envVariables:
         flowable.design.model-locking.enabled: true
         flowable.design.model-locking.auto-lock-on-create: true

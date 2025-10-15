@@ -47,4 +47,6 @@ else
 	# kubectl config set-context --current  --cluster="$CLUSTER_NAME"-kind --namespace="$NAMESPACE"
 fi
 
+scripts/port-forward-http.sh ingress-nginx ingress-nginx
+
 #/bin/bash -c "k9s -c --crumbless"
