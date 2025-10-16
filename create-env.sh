@@ -1,11 +1,12 @@
 
 #!/bin/bash
 
+CODESPACE_VSCODE_FOLDER=${CODESPACE_VSCODE_FOLDER:-$(pwd)}
 # Reusable function for cluster setup
 setup_cluster() {
 	local cluster_name="$1"
 	echo "Setting up kind cluster '$cluster_name'"
-	bash -c "$CODESPACE_VSCODE_FOLDER/scripts/kind-cluster-setup.sh $cluster_name true true"
+	source "$CODESPACE_VSCODE_FOLDER/scripts/kind-cluster-setup.sh" "$cluster_name" true true
 }
 
 # Reusable function for deployment
@@ -13,7 +14,7 @@ deploy_flowable() {
 	local namespace="$1"
 	local release_name="$2"
 	echo "Deploying Flowable Platform in namespace '$namespace' with release name '$release_name'"
-	"$CODESPACE_VSCODE_FOLDER/scripts/deploy-flowable-platform.sh" "$namespace" "$release_name"
+	source "$CODESPACE_VSCODE_FOLDER/scripts/deploy-flowable-platform.sh" "$namespace" "$release_name"
 }
 
 # Get latest scripts
